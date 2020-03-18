@@ -1,0 +1,365 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "v1",
+    "title" : "Ebay Shipping Eligibility Service API",
+    "contact" : {
+      "name" : "Henry Lian"
+    }
+  },
+  "basePath" : "/api",
+  "tags" : [
+    {
+      "name" : "Eligible Service API"
+    },{
+    "name" : "Eligible Service Admin API"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/shipping/eligible" : {
+      "post" : {
+        "tags" : [ "Eligible Service API" ],
+        "summary" : "check shipping eligibility",
+        "description" : "",
+        "operationId" : "isEligible",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "example": [{
+              "title": "clorox",
+              "seller": "henry",
+              "category": 4,
+              "price": 181.0
+            },{
+              "title": "anything",
+              "seller": "buffet",
+              "category": 4,
+              "price": 160.0
+            }],
+            "items" : {
+              "$ref" : "#/definitions/Item"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Item"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad request"
+          }
+        }
+      }
+    },
+    "/admin/enrollment" : {
+      "get" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "getAllEnrolledSellers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Seller"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/enrollment/{name}" : {
+      "put" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "enrollSeller",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/Seller"
+            }
+          },
+          "409" : {
+            "description" : "conflict"
+          }
+        }
+      }
+    },
+    "/admin/rules/valueCompare" : {
+      "get" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "getAllNumericRules",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/NumericRule"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "updateNumericRule",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/NumericRule"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          },
+          "400" : {
+            "description" : "bad request"
+          },
+          "404" : {
+            "description" : "resource not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "createNumericRule",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/NumericRule"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/NumericRule"
+            }
+          },
+          "409" : {
+            "description" : "conflict"
+          }
+        }
+      }
+    },
+    "/admin/rules/valueCompare/{id}" : {
+      "delete" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "deleteNumericRuleById",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          },
+          "404" : {
+            "description" : "resource not found"
+          }
+        }
+      }
+    },
+    "/admin/rules" : {
+      "get" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "getAllRules",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/category" : {
+      "get" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "getAllCategories",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Category"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/category/{categoryId}" : {
+      "put" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "addCategory",
+        "parameters" : [ {
+          "name" : "categoryId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Success"
+          },
+          "409" : {
+            "description" : "conflict"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "deleteCategory",
+        "parameters" : [ {
+          "name" : "categoryId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/admin/enrollment/{id}" : {
+      "delete" : {
+        "tags" : [ "Eligible Service Admin API" ],
+        "operationId" : "deleteEnrolledSellerById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          },
+          "404" : {
+            "description" : "resource not found"
+          }
+        }
+      }
+    }
+
+  },
+  "definitions" : {
+    "Seller" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NumericRule" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "attributeName" : {
+          "type" : "string"
+        },
+        "operator" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "number",
+          "format" : "double"
+        }
+      }
+    },
+    "Category" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "categoryId" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Item" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "seller" : {
+          "type" : "string"
+        },
+        "category" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "price" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "eligible" : {
+          "type" : "boolean"
+        }
+      }
+    }
+  }
+}
